@@ -5,7 +5,6 @@ const projectService = require("./projectService")
 const routes = Router();
 
 routes.post("/test", function (request, response, next) {
-    console.log("got here");
     
     projectService.test();
 

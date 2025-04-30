@@ -10,25 +10,35 @@ if (!fs.existsSync(`./${DB_FILENAME}`)) {
     fs.writeFile(`./${DB_FILENAME}`, "", err => {});
 }
 
+const sqlErrorHandler = (err) => {
+    if (err) {
+        db.close();
+        console.log("[ SQL ERROR ] :", err.message);
+        throw err;
+    }
+};
+
 function callStatement(sql, params = undefined) {
     console.log(`[ SQL ] : ${sql}`);
     
     const db = new sqlite3.Database(DB_FILENAME, sqlite3.OPEN_READWRITE);
-    const errorHandler = (err) => {
-        if (err) {
-            db.close();
-            console.log("[ SQL ERROR ] :", err.message);
-            throw err;
-        }
-    };
+    
 
     if (params){
-        db.run(sql, params, errorHandler);
+        db.run(sql, params, sqlErrorHandler);
     }else {
-        db.exec(sql, errorHandler);
+        db.exec(sql, sqlErrorHandler);
     }
 
+    
+    db.close();
+}
 
+
+function getFromDb(sql, params = undefined){
+    console.log(`[ SQL ] : ${sql}`);
+    const db = new sqlite3.Database(DB_FILENAME, sqlite3.OPEN_READONLY);
+    return db.all(sql, params, sqlErrorHandler);
     db.close();
 }
 
@@ -84,17 +94,15 @@ function saveObjectToDb(tableName, object){
 
     const schema = schemaTable[tableName];
 
-
     // check that fields match
     for (const fieldName in object){
-        console.log(fieldName);
         if (!Object.values(schema.fields).includes(fieldName)){
             throw new Error(`Schema and object do not match. Field ${fieldName} not found in schema ${tableName}`);
         }
     }
 
     // construct sql
-    let sql = `insert or replace into ${tableName} (${schema.fields.join(",")}) values (
+    const sql = `insert or replace into ${tableName} (${schema.fields.join(",")}) values (
     ${Object.entries(object).map((it)=> {
         if (schema.key === it[0]){
             return `(select ${schema.key} from ${tableName} where ${schema.key} = ?)`
@@ -106,3 +114,14 @@ function saveObjectToDb(tableName, object){
     callStatement(sql, Object.values(object));    
 }
 module.exports.saveObjectToDb = saveObjectToDb;
+
+
+
+function getObjectsFromTable(tableName){
+    const schema = schemaTable[tableName];
+
+    const sql = `select * from ${tableName}`;
+    // TODO : this
+
+}
+module.exports.getObjectsFromTable = getObjectsFromTable;
