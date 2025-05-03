@@ -20,13 +20,30 @@ routes.get("/", async function (request, response) {
 
 routes.post("/", function(request, response) {
     try {
-        
-
         projectService.addProject(request.body.title, request.body.description, request.body.dateCreated, request.body.dateEnded);
         response.send({});
     } catch (err){
         response.send(err);
     }
+})
+
+routes.post("/:id/update", function(request, response) {
+    try {
+        projectService.updateProject(request.params.id, request.body.title, request.body.description, request.body.dateCreated, request.body.dateEnded);
+        response.send({});
+    }catch (err) {
+        response.send(err);
+    }
+});
+
+
+routes.get("/:id", async function(request, response) {
+    try {
+        const out = await projectService.getProject(request.params.id);
+        response.send(out[0]);
+    }catch (err) {
+        response.send(err);
+    } 
 })
 
 module.exports = routes;

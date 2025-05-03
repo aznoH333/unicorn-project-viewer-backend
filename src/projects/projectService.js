@@ -54,9 +54,22 @@ module.exports.addProject = addProject;
 
 
 function updateProject(id, title, description, dateCreated, dateEnded){
-
+    // TODO : validate data
+    db.saveObjectToDb(TABLE_NAME, {
+        id,
+        title,
+        description,
+        dateCreated,
+        dateEnded,
+    });
 }
 module.exports.updateProject = updateProject;
+
+
+async function getProject(id){
+    return await db.getObjectsFromTable(TABLE_NAME, "id = ?", [id]);
+}
+module.exports.getProject = getProject;
 
 
 function deleteProject(id){

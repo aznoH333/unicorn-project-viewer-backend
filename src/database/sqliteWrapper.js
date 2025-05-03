@@ -139,12 +139,12 @@ module.exports.saveObjectToDb = saveObjectToDb;
 
 
 
-async function getObjectsFromTable(tableName){
+async function getObjectsFromTable(tableName, where, params){
     const schema = schemaTable[tableName];
 
-    const sql = `select * from ${tableName}`;
+    const sql = `select * from ${tableName} ${where ? `where ${where}` : ""}`;
     
-    return getFromDb(sql);
+    return getFromDb(sql, params);
 }
 
 module.exports.getObjectsFromTable = getObjectsFromTable;
