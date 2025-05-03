@@ -31,3 +31,28 @@ function test(){
 }
 
 module.exports.test = test;
+
+
+
+async function getAllProjects(){
+    return await db.getObjectsFromTable(TABLE_NAME);
+}
+module.exports.getAllProjects = getAllProjects;
+
+
+function addProject(title, description, dateCreated, dateEnded){
+
+}
+module.exports.addProject = addProject;
+
+
+function updateProject(id, title, description, dateCreated, dateEnded){
+
+}
+module.exports.updateProject = updateProject;
+
+
+function deleteProject(id){
+
+}
+module.exports.deleteProject = deleteProject;

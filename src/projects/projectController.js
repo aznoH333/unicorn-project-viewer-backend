@@ -12,4 +12,10 @@ routes.post("/test", function (request, response, next) {
 
 });
 
+
+routes.get("/", async function (request, response, next) {
+    const out = await projectService.getAllProjects();
+    response.send(out);
+})
+
 module.exports = routes;

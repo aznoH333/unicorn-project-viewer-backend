@@ -34,12 +34,21 @@ function callStatement(sql, params = undefined) {
     db.close();
 }
 
+async function dbAll(db, params, query){
+    return new Promise(function(resolve,reject){
+        db.all(query, params, function(err,rows){
+           if(err){return reject(err);}
+           resolve(rows);
+         });
+    });
+}
 
-function getFromDb(sql, params = undefined){
+async function getFromDb(sql, params = undefined){
     console.log(`[ SQL ] : ${sql}`);
     const db = new sqlite3.Database(DB_FILENAME, sqlite3.OPEN_READONLY);
-    return db.all(sql, params, sqlErrorHandler);
+    const output = await dbAll(db, params, sql);
     db.close();
+    return output;
 }
 
 
@@ -51,7 +60,6 @@ function defineTableFromSchema(tableName, schema) {
         throw new Error(`Duplicate table definition ${tableName}`);
     }
     
-
     // construct sql statement
     let fields = '';
     let iter = 0;
@@ -117,11 +125,12 @@ module.exports.saveObjectToDb = saveObjectToDb;
 
 
 
-function getObjectsFromTable(tableName){
+async function getObjectsFromTable(tableName){
     const schema = schemaTable[tableName];
 
     const sql = `select * from ${tableName}`;
-    // TODO : this
-
+    
+    return getFromDb(sql);
 }
+
 module.exports.getObjectsFromTable = getObjectsFromTable;
