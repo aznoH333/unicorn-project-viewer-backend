@@ -41,7 +41,14 @@ module.exports.getAllProjects = getAllProjects;
 
 
 function addProject(title, description, dateCreated, dateEnded){
-
+    // TODO : validate data
+    
+    db.saveObjectToDb(TABLE_NAME, {
+        title,
+        description,
+        dateCreated,
+        dateEnded,
+    });
 }
 module.exports.addProject = addProject;
 

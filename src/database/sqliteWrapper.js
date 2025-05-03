@@ -12,7 +12,6 @@ if (!fs.existsSync(`./${DB_FILENAME}`)) {
 
 const sqlErrorHandler = (err) => {
     if (err) {
-        db.close();
         console.log("[ SQL ERROR ] :", err.message);
         throw err;
     }
@@ -114,7 +113,6 @@ function saveObjectToDb(tableName, object){
     const updateExisting = Object.keys(object).includes(keyName);
 
 
-    
     // construct sql
     let sql;
 
@@ -130,11 +128,11 @@ function saveObjectToDb(tableName, object){
     }else {
         // insert
         sql = `
-            insert into ${tableName} (${schema.fields.join(",")})
-            values (${Object.entries.map((it) => "?").join(",")});
+            insert into ${tableName} (${Object.keys(object).join(",")})
+            values (${Object.entries(object).map((it) => "?").join(",")});
         `;
-    }
 
+    }
     callStatement(sql, Object.values(object));    
 }
 module.exports.saveObjectToDb = saveObjectToDb;
