@@ -1,4 +1,4 @@
-const db = require("../database/sqliteWrapper");
+const db = require("../utils/sqliteWrapper");
 const postService = require("./postService");
 const TABLE_NAME = "project_entity"
 

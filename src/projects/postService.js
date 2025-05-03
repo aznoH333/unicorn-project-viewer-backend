@@ -1,4 +1,4 @@
-const db = require("../database/sqliteWrapper");
+const db = require("../utils/sqliteWrapper");
 const TABLE_NAME = "project_post_entity";
 
 
@@ -22,7 +22,6 @@ module.exports.getAllPostForProject = getAllPostForProject;
 
 
 function addPostToProject(projectId, title, content){
-    // TODO : validate
     db.saveObjectToDb(TABLE_NAME, {
         title,
         content,
@@ -34,7 +33,6 @@ module.exports.addPostToProject = addPostToProject;
 
 
 function updatePost(projectId, postId, title, content){
-    // TODO : validate
     db.saveObjectToDb(TABLE_NAME, {
         id: postId,
         title,
