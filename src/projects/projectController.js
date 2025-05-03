@@ -5,11 +5,9 @@ const projectService = require("./projectService")
 const routes = Router();
 
 routes.post("/test", function (request, response) {
-    
     projectService.test();
 
     response.send("aaaa");
-
 });
 
 
@@ -44,6 +42,16 @@ routes.get("/:id", async function(request, response) {
     }catch (err) {
         response.send(err);
     } 
-})
+});
+
+
+routes.delete("/:id", function (request, response) {
+    try {
+        projectService.deleteProject(request.params.id);
+        response.send({});
+    }catch (e) {
+        response.send(e);
+    }
+});
 
 module.exports = routes;

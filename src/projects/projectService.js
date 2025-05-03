@@ -73,6 +73,6 @@ module.exports.getProject = getProject;
 
 
 function deleteProject(id){
-
+    db.deleteObjectsFromTable(TABLE_NAME, "id = ?", [id]);
 }
 module.exports.deleteProject = deleteProject;

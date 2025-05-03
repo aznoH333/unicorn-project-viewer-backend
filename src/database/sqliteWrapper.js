@@ -140,11 +140,16 @@ module.exports.saveObjectToDb = saveObjectToDb;
 
 
 async function getObjectsFromTable(tableName, where, params){
-    const schema = schemaTable[tableName];
-
     const sql = `select * from ${tableName} ${where ? `where ${where}` : ""}`;
     
     return getFromDb(sql, params);
 }
 
 module.exports.getObjectsFromTable = getObjectsFromTable;
+
+
+function deleteObjectsFromTable(tableName, where, params) {
+    const sql = `delete from ${tableName} ${where ? `where ${where}` : ""}`;
+    callStatement(sql, params);
+}
+module.exports.deleteObjectsFromTable = deleteObjectsFromTable;
