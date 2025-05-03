@@ -109,15 +109,31 @@ function saveObjectToDb(tableName, object){
         }
     }
 
+    // find key
+    const keyName = schema.key;
+    const updateExisting = Object.keys(object).includes(keyName);
+
+
+    
     // construct sql
-    const sql = `insert or replace into ${tableName} (${schema.fields.join(",")}) values (
-    ${Object.entries(object).map((it)=> {
-        if (schema.key === it[0]){
-            return `(select ${schema.key} from ${tableName} where ${schema.key} = ?)`
-        }else {
-            return "?";
-        }
-    }).join(",")});`;
+    let sql;
+
+    if (updateExisting) {
+        // update
+        sql = `
+            update ${tableName} set
+            ${Object.entries(object).map((it) => {
+                return `${it[0]} = ?`
+            }).join(',')}
+            where ${keyName} = ${Object.entries(object).find((it)=>{return it[0] === keyName})[1]}
+        `;
+    }else {
+        // insert
+        sql = `
+            insert into ${tableName} (${schema.fields.join(",")})
+            values (${Object.entries.map((it) => "?").join(",")});
+        `;
+    }
 
     callStatement(sql, Object.values(object));    
 }
