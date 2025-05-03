@@ -1,4 +1,5 @@
 const db = require("../database/sqliteWrapper");
+const postService = require("./postService");
 const TABLE_NAME = "project_entity"
 
 db.defineTableFromSchema(
@@ -11,27 +12,6 @@ db.defineTableFromSchema(
         dateEnded: { type: "TEXT" },
     }
 )
-
-
-
-
-function saveProject(project){
-
-}
-
-
-function test(){
-    db.saveObjectToDb(TABLE_NAME, {
-        id: 0,
-        title: "test",
-        description: "beams",
-        dateCreated: "0",
-        dateEnded: "0",
-    })
-}
-
-module.exports.test = test;
-
 
 
 async function getAllProjects(){
@@ -73,6 +53,7 @@ module.exports.getProject = getProject;
 
 
 function deleteProject(id){
+    postService.deleteAllPostsForProject(id);
     db.deleteObjectsFromTable(TABLE_NAME, "id = ?", [id]);
 }
 module.exports.deleteProject = deleteProject;

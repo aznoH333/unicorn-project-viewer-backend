@@ -1,16 +1,12 @@
 const express = require("express");
 const Router = express.Router;
-const projectService = require("./projectService")
+const projectService = require("./projectService");
+const postService = require("./postService");
 
 const routes = Router();
 
-routes.post("/test", function (request, response) {
-    projectService.test();
 
-    response.send("aaaa");
-});
-
-
+// base projects
 routes.get("/", async function (request, response) {
     const out = await projectService.getAllProjects();
     response.send(out);
@@ -53,5 +49,53 @@ routes.delete("/:id", function (request, response) {
         response.send(e);
     }
 });
+
+
+// posts
+routes.get("/:id/posts", async function (request, response) {
+    try {
+        const out = await postService.getAllPostForProject(request.params.id);
+        response.send(out);
+    }catch (e) {
+        response.send(e);
+    }
+});
+
+routes.post("/:id/posts", function (request, response) {
+    try {
+        postService.addPostToProject(request.params.id, request.body.title, request.body.content);
+        response.send({});
+    }catch (e) {
+        response.send(e);
+    }
+});
+
+routes.post("/:id/posts/:postId", function (request, response) {
+    try {
+        postService.updatePost(request.params.id, request.params.postId, request.body.title, request.body.content);
+        response.send({});
+    }catch (e) {
+        response.send(e);
+    }
+});
+
+routes.get("/:id/posts/:postId", async function (request, response) {
+    try {
+        const out = await postService.getPostById(request.params.id, request.params.postId);
+        response.send(out);
+    }catch (e) {
+        response.send(e);
+    }
+});
+
+routes.delete("/:id/posts/:postId", function (request, response) {
+    try {
+        postService.removeProjectPostById(request.params.id, request.params.postId);
+        response.send({});
+    }catch (e) {
+        response.send(e);
+    }
+});
+
 
 module.exports = routes;

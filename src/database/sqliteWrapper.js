@@ -63,16 +63,24 @@ function defineTableFromSchema(tableName, schema) {
     let fields = '';
     let iter = 0;
     let key = undefined;
+    let foreignKeys = [];
     for (const fieldName in schema){
         const fieldAttributes = schema[fieldName];
         fields += `${fieldName} ${fieldAttributes.type} ${fieldAttributes.key ? fieldAttributes.key : ""}`;
         iter++;
-        if (iter < Object.keys(schema).length){
+        if (iter < Object.keys(schema).length || fieldAttributes.foreignKey || foreignKeys.length !== 0){
             fields += ',';
         }
 
         if (fieldAttributes.key){
             key = fieldName;
+        }
+
+        if (fieldAttributes.foreignKey) {
+            foreignKeys.push({
+                fieldName,
+                foreignKey: fieldAttributes.foreignKey
+            });
         }
     }
 
@@ -80,8 +88,10 @@ function defineTableFromSchema(tableName, schema) {
 
     callStatement(
         `CREATE TABLE IF NOT EXISTS ${tableName} (
-        ${fields})`
-    )
+        ${fields}
+        ${foreignKeys.map((it)=>`FOREIGN KEY(${it.fieldName}) REFERENCES ${it.foreignKey}`).join(",")}
+        )`
+    );
 
     // update schema table
     schemaTable[tableName] = 
