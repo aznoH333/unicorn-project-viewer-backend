@@ -2,14 +2,10 @@ const express = require("express");
 const Router = express.Router;
 const projectService = require("./projectService");
 const postService = require("./postService");
-const validator = require("../utils/requestValidator");
+const validator = require("../../utils/requestValidator");
 
 const routes = Router();
 
-
-function errorHandler(err) {
-
-}
 
 // base projects
 routes.get("/", async function (request, response) {
