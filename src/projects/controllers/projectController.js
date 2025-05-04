@@ -6,6 +6,7 @@ const validator = require("../../utils/requestValidator");
 
 const routes = Router();
 const DATE_VALIDATION_REGEX = /[1-3]?[0-9]-([0-9]|([1][0-2]))-2[0-9][0-9][0-9]/;
+const TITLE_VALIDATION_REGEX = /.{3,}/;
 
 
 // base projects
@@ -17,7 +18,7 @@ routes.get("/", async function (request, response) {
 routes.post("/", function(request, response, next) {
     try {
         validator.validateRequest(request.body, {
-            title: { type: "string", required: true },
+            title: { type: "string", required: true, matches: TITLE_VALIDATION_REGEX},
             description: { type: "string", required: true },
             dateCreated: { type: "string", required: true, matches: DATE_VALIDATION_REGEX },
             dateEnded: { type: "string", matches: DATE_VALIDATION_REGEX }
@@ -34,7 +35,7 @@ routes.post("/", function(request, response, next) {
 routes.post("/:id/update", function(request, response, next) {
     try {
         validator.validateRequest(request.body, {
-            title: { type: "string", required: true },
+            title: { type: "string", required: true, matches: TITLE_VALIDATION_REGEX },
             description: { type: "string", required: true },
             dateCreated: { type: "string", required: true, matches: DATE_VALIDATION_REGEX },
             dateEnded: { type: "string", matches: DATE_VALIDATION_REGEX }
@@ -78,12 +79,18 @@ routes.get("/:id/posts", async function (request, response, next) {
     }
 });
 
-routes.post("/:id/posts", function (request, response, next) {
+routes.post("/:id/posts", async function (request, response, next) {
     try {
         validator.validateRequest(request.body, {
-            title: { type: "string", required: true },
+            title: { type: "string", required: true, matches: TITLE_VALIDATION_REGEX },
             content: { type: "string" },
         });
+
+        const exists = await projectService.doesProjectExist(request.params.id);
+        if (!exists) {
+            throw new Error(`Project with id ${request.params.id} doesn't exist`);
+        }
+
         postService.addPostToProject(request.params.id, request.body.title, request.body.content);
         response.send({});
     }catch (e) {
@@ -91,12 +98,17 @@ routes.post("/:id/posts", function (request, response, next) {
     }
 });
 
-routes.post("/:id/posts/:postId", function (request, response, next) {
+routes.post("/:id/posts/:postId", async function (request, response, next) {
     try {
         validator.validateRequest(request.body, {
-            title: { type: "string", required: true },
+            title: { type: "string", required: true, matches: TITLE_VALIDATION_REGEX },
             content: { type: "string" },
         });
+        
+        const exists = await projectService.doesProjectExist(request.params.id);
+        if (!exists) {
+            throw new Error(`Project with id ${request.params.id} doesn't exist`);
+        }
         postService.updatePost(request.params.id, request.params.postId, request.body.title, request.body.content);
         response.send({});
     }catch (e) {

@@ -288,3 +288,34 @@ function deleteObjectsFromTable(tableName, where, params) {
     callStatement(sql, params);
 }
 module.exports.deleteObjectsFromTable = deleteObjectsFromTable;
+
+/**
+ * Checks if any objects exist in the specified table that match the given criteria.
+ * This function utilizes the `getObjectsFromTable` function to retrieve data and 
+ * determines if any records are present based on the provided parameters.
+ * 
+ * @param {string} tableName - The name of the table to check for existing objects. 
+ *                             This table must exist in the database.
+ * 
+ * @param {string} where - An optional WHERE clause for filtering the results. 
+ *                         Use placeholders (?) for parameterized queries to prevent SQL injection.
+ * 
+ * @param {string[]} params - An array of parameters to replace the placeholders in the WHERE clause. 
+ *                            The order of the parameters should match the order of the placeholders.
+ * 
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value. 
+ *                             Returns `true` if at least one object exists in the table that matches the criteria, 
+ *                             otherwise returns `false`.
+ * 
+ * @throws {Error} Throws an error if the specified table does not exist or if the query fails for any reason.
+ * 
+ * @example
+ * // Example usage of checkIfObjectExists function
+ * const exists = await checkIfObjectExists('users', 'email = ?', ['example@example.com']);
+ * console.log(exists); // Outputs true if a user with the specified email exists, otherwise false
+ */
+async function checkIfObjectExists(tableName, where, params) {
+    const result = await getObjectsFromTable(tableName, where, params);
+    return result.length > 0;
+}
+module.exports.checkIfObjectExists = checkIfObjectExists

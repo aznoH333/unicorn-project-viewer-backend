@@ -103,7 +103,7 @@ module.exports.updateProject = updateProject;
  * console.log(project); // Outputs the project with ID 1
  */
 async function getProject(id){
-    return await db.getObjectsFromTable(TABLE_NAME, "id = ?", [id]);
+    return (await db.getObjectsFromTable(TABLE_NAME, "id = ?", [id]))[0];
 }
 module.exports.getProject = getProject;
 
@@ -121,3 +121,14 @@ function deleteProject(id){
     db.deleteObjectsFromTable(TABLE_NAME, "id = ?", [id]);
 }
 module.exports.deleteProject = deleteProject;
+
+
+/**
+ * checks if a project with a specified id exists.
+ * @param {number} id - project to search for 
+ * @returns {boolean} true if yes, false if no
+ */
+async function doesProjectExist(id) {
+    return (await getProject(id)) !== undefined
+}
+module.exports.doesProjectExist = doesProjectExist;
