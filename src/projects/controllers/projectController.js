@@ -5,6 +5,7 @@ const postService = require("../services/postService");
 const validator = require("../../utils/requestValidator");
 
 const routes = Router();
+const DATE_VALIDATION_REGEX = /[1-3]?[0-9]-([0-9]|([1][0-2]))-2[0-9][0-9][0-9]/;
 
 
 // base projects
@@ -18,8 +19,8 @@ routes.post("/", function(request, response, next) {
         validator.validateRequest(request.body, {
             title: { type: "string", required: true },
             description: { type: "string", required: true },
-            dateCreated: { type: "string", required: true },
-            dateEnded: { type: "string" }
+            dateCreated: { type: "string", required: true, matches: DATE_VALIDATION_REGEX },
+            dateEnded: { type: "string", matches: DATE_VALIDATION_REGEX }
         });
         
         
@@ -35,8 +36,8 @@ routes.post("/:id/update", function(request, response, next) {
         validator.validateRequest(request.body, {
             title: { type: "string", required: true },
             description: { type: "string", required: true },
-            dateCreated: { type: "string", required: true },
-            dateEnded: { type: "string" }
+            dateCreated: { type: "string", required: true, matches: DATE_VALIDATION_REGEX },
+            dateEnded: { type: "string", matches: DATE_VALIDATION_REGEX }
         });
         
         projectService.updateProject(request.params.id, request.body.title, request.body.description, request.body.dateCreated, request.body.dateEnded);
