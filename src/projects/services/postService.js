@@ -16,6 +16,7 @@
  */
 
 const db = require("../../utils/sqliteWrapper");
+const dateUtils = require("../../utils/dateUtils");
 const TABLE_NAME = "project_post_entity";
 
 db.defineTableFromSchema(
@@ -61,7 +62,7 @@ function addPostToProject(projectId, title, content){
     db.saveObjectToDb(TABLE_NAME, {
         title,
         content,
-        datePosted: new Date().toString(),
+        datePosted: dateUtils.formatDate(new Date()),
         projectId,
     })
 }
@@ -85,7 +86,7 @@ function updatePost(projectId, postId, title, content){
         id: postId,
         title,
         content,
-        datePosted: new Date().toString(),
+        datePosted: dateUtils.formatDate(new Date()),
         projectId,
     })
 }

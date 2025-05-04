@@ -5,7 +5,7 @@ const postService = require("../services/postService");
 const validator = require("../../utils/requestValidator");
 
 const routes = Router();
-const DATE_VALIDATION_REGEX = /[1-3]?[0-9]-([0-9]|([1][0-2]))-2[0-9][0-9][0-9]/;
+const DATE_VALIDATION_REGEX = /^[1-3]?[0-9]-([0-9]|([1][0-2]))-2[0-9][0-9][0-9]$/;
 const TITLE_VALIDATION_REGEX = /.{3,}/;
 
 
