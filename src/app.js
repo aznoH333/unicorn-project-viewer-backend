@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const projectController = require("./projects/projectController");
+const projectController = require("./projects/controllers/projectController");
 
 
 app.use(express.json());

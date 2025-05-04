@@ -1,7 +1,7 @@
 const express = require("express");
 const Router = express.Router;
-const projectService = require("./projectService");
-const postService = require("./postService");
+const projectService = require("../services/projectService");
+const postService = require("../services/postService");
 const validator = require("../../utils/requestValidator");
 
 const routes = Router();
